@@ -37,7 +37,8 @@ player_surf = pygame.image.load('img/player/player_walk_1.png').convert_alpha()
 player_rect = player_surf.get_rect(midbottom = (80, 300)) 
 
 player_stand = pygame.image.load('img/player/player_stand.png')
-player_stand_rect = player_stand.get_rect(midbottom = (80, 300))
+player_stand = pygame.transform.scale(player_stand, (200, 400))
+player_stand_rect = player_stand.get_rect(center = (width/2, height/2))
 
 while True:
     for event in pygame.event.get():
