@@ -34,11 +34,13 @@ while True:
             pygame.quit()
             exit()
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE and player_rect.bottom >= 300 and game_active:
-                player_v = -8
+        if game_active:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and player_rect.bottom >= 300:
+                    player_v = -8
 
-            if event.key == pygame.K_SPACE and not game_active:
+        else:
+            if event.key == pygame.K_SPACE:
                 game_active = True
                 snail_rect.left = 800
                 player_rect.bottom = 300
