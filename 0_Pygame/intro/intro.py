@@ -13,6 +13,7 @@ pygame.display.set_caption("Runner")
 clock = pygame.time.Clock()
 test_font = pygame.font.Font('font/Pixeltype.ttf', 50)
 
+game_active = True
 
 
 sky_surf = pygame.image.load('img/Sky.png').convert()
@@ -34,39 +35,45 @@ while True:
             exit()
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE and player_rect.bottom >= 300:
+            if event.key == pygame.K_SPACE and player_rect.bottom >= 300 and game_active:
                 player_v = -8
+
+            if event.key == pygame.K_SPACE and not game_active:
+                game_active = True
+                snail_rect.left = 800
+                player_rect.bottom = 300
   
+    if game_active:
+
+        screen.blit(sky_surf, (0, 0)) 
+        screen.blit(ground_surf, (0, 300)) 
+
+        pygame.draw.rect(screen, '#c0e8ec', score_rect, 40)
+        pygame.draw.rect(screen, '#c0e8ec', score_rect)
+
+        player_rect.y += player_v
+        player_v += g
+
+        if player_rect.bottom > 300: player_rect.bottom = 300
+
+        screen.blit(score_surf, score_rect)  
+        
+        screen.blit(snail_surf, snail_rect)
+        screen.blit(player_surf, player_rect)
+
+        snail_rect.x -= 4 
+        if snail_rect.right <= 0: snail_rect.left = 800
+
+        if player_rect.colliderect(snail_rect):
+            game_active = False
+
+        mouse_pos = pygame.mouse.get_pos()
+        if player_rect.collidepoint(mouse_pos):
+            print("Mus")
  
-    screen.blit(sky_surf, (0, 0)) 
-    screen.blit(ground_surf, (0, 300)) 
-
-    pygame.draw.rect(screen, '#c0e8ec', score_rect, 40)
-    pygame.draw.rect(screen, '#c0e8ec', score_rect)
-
-    player_rect.y += player_v
-    player_v += g
-
-    if player_rect.bottom > 300: player_rect.bottom = 300
-
-    screen.blit(score_surf, score_rect)  
-    
-    screen.blit(snail_surf, snail_rect)
-    screen.blit(player_surf, player_rect)
-
-    snail_rect.x -= 4 
-    if snail_rect.right <= 0: snail_rect.left = 800
-
-    if player_rect.colliderect(snail_rect):
-        pygame.quit()
-        exit() 
-
-   
-
-    mouse_pos = pygame.mouse.get_pos()
-    if player_rect.collidepoint(mouse_pos):
-        print("Mus")
- 
+    else:
+        screen.fill('Red')
+         
     
     pygame.display .update()
     clock.tick(fps)
