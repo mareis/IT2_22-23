@@ -68,17 +68,27 @@ start_time = 0
 sky_surf = pygame.image.load('img/Sky.png').convert()
 ground_surf = pygame.image.load('img/ground.png').convert()
 
-#score_surf = test_font.render('My game', False, (64,64,64)) 
-#score_rect = score_surf.get_rect(center = (width/2, 50))
-
 
 # Obsticales
-snail_surf = pygame.image.load('img/snail/snail1.png').convert_alpha() 
-fly_surf = pygame.image.load('img/fly/fly1.png').convert_alpha()
+#snail_surf = pygame.image.load('img/snail/snail1.png').convert_alpha() 
+
+snail_frames = [
+    pygame.image.load('img/snail/snail1.png').convert_alpha(),
+    pygame.image.load('img/snail/snail2.png').convert_alpha() 
+]
+snail_frame_index = 0
+snail_surf = snail_frames[snail_frame_index]
+
+fly_frames = [
+    pygame.image.load('img/fly/fly1.png').convert_alpha(),
+    pygame.image.load('img/fly/fly2.png').convert_alpha()
+]
+
+fly_frame_index = 0
+fly_surf = fly_frames[fly_frame_index]
+
 
 obstacle_rect_list = []
-
-
 
 player_walk = [ 
     pygame.image.load('img/player/player_walk_1.png').convert_alpha(),
@@ -104,9 +114,17 @@ game_name_rect = game_name_surf.get_rect(center = (width/2, 70))
 game_message_surf = test_font.render('Press space to run', False, (111,196,169)) 
 game_message_rect = game_message_surf.get_rect(center = (width/2, height-70))
 
-# Timer
+# Timers
 obstacle_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(obstacle_timer, 1500) 
+
+snail_animation_timer = pygame.USEREVENT + 2
+pygame.time.set_timer(snail_animation_timer, 500) 
+
+fly_animation_timer = pygame.USEREVENT + 3
+pygame.time.set_timer(fly_animation_timer, 200) 
+
+
 
 while True:
     for event in pygame.event.get():
@@ -122,6 +140,17 @@ while True:
             if event.type == obstacle_timer:
                 if randint(0,2):obstacle_rect_list.append(snail_surf.get_rect(midbottom = (randint(900, 1100), 300)))
                 else: obstacle_rect_list.append(fly_surf.get_rect(midbottom = (randint(900, 1100), 210)))
+
+            if event.type == snail_animation_timer:
+                if snail_frame_index == 0: snail_frame_index = 1
+                else: snail_frame_index = 0
+                snail_surf = snail_frames[snail_frame_index]
+            
+
+            if event.type == fly_animation_timer:
+                if fly_frame_index == 0: fly_frame_index = 1
+                else: fly_frame_index = 0
+                fly_surf = fly_frames[fly_frame_index]
 
 
         else:
