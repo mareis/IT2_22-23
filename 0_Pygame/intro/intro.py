@@ -35,16 +35,15 @@ def collisions(player, obstacle_list):
     return True
 
 def player_animation():
-    #global player_index  
+    global player_index  
     if player_rect.bottom < 300:
         return player_jump
 
     else:
         global player_index
         player_index += 0.1
-        print(int(player_index))
 
-        if player_index >= 2: player_index = 0
+        if player_index >= len(player_walk): player_index = 0
         return player_walk[int(player_index)]
 
 
