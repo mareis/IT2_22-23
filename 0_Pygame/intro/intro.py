@@ -213,6 +213,5 @@ while True:
         else: screen.blit(game_score_surf, game_score_rect)
 
          
-    
     pygame.display .update()
     clock.tick(fps)
