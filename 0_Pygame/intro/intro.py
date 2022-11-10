@@ -10,25 +10,42 @@ def display_score():
     screen.blit(score_surf, score_rect)
 
     return current_time//1000 
- 
 
 def obstacle_movement(obstacle_list):
     if obstacle_list:
         for rect in obstacle_list:
             rect.x -= 5 
 
-            screen.blit(snail_surf, rect)
+            if rect.bottom == 300: screen.blit(snail_surf, rect)
+            else: screen.blit(fly_surf, rect)
+
 
         if obstacle_list[0].x < -  100:
             obstacle_list.pop(0)
             #print(obstacle_list[0].x)
 
              
-    
-            
-            
     return obstacle_list
              
+def collisions(player, obstacle_list):
+    if obstacle_list:
+        for obstacle in obstacle_list:
+            if player.colliderect(obstacle): return False
+
+    return True
+
+def player_animation():
+    #global player_index  
+    if player_rect.bottom < 300:
+        return player_jump
+
+    else:
+        global player_index
+        player_index += 0.1
+        print(int(player_index))
+
+        if player_index >= 2: player_index = 0
+        return player_walk[int(player_index)]
 
 
 
@@ -63,7 +80,16 @@ fly_surf = pygame.image.load('img/fly/fly1.png').convert_alpha()
 obstacle_rect_list = []
 
 
-player_surf = pygame.image.load('img/player/player_walk_1.png').convert_alpha()
+
+player_walk = [ 
+    pygame.image.load('img/player/player_walk_1.png').convert_alpha(),
+    pygame.image.load('img/player/player_walk_2.png').convert_alpha()
+]
+player_index = 0;
+player_jump = pygame.image.load('img/player/jump.png').convert_alpha()
+
+
+player_surf = player_walk[player_index]
 player_rect = player_surf.get_rect(midbottom = (80, 300)) 
 
 #
@@ -118,12 +144,15 @@ while True:
 
         if player_rect.bottom > 300: player_rect.bottom = 300
 
+        player_surf = player_animation()
         screen.blit(player_surf, player_rect)
 
         
         # Obstacle movement 
         obstacle_rect_list = obstacle_movement(obstacle_rect_list)
          
+        # Clollision
+        game_active = collisions(player_rect, obstacle_rect_list)
 
         #screen.blit(snail_surf, snail_rect)
         #snail_rect.x -= 4 
@@ -142,6 +171,10 @@ while True:
     else:
         screen.fill((94, 129, 162))
         screen.blit(player_stand, player_stand_rect)
+        obstacle_rect_list.clear()
+
+        player_rect.bottom = 300
+        player_v = 0
 
         game_score_surf = test_font.render(f'Youre score: {score}', False, (111,196,169)) 
         game_score_rect = game_score_surf.get_rect(center = (width/2, height-70))
