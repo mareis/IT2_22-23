@@ -1,13 +1,7 @@
+from turtle import st
 import pygame
 from sys import exit
 from random import randint
-
-
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image =  pygame.image.load('img/player/player_walk_1.png').convert_alpha()   
-        self.rect = self.image.get_rect(midbottom = (200, 300))
 
 def display_score():
     current_time = pygame.time.get_ticks() - start_time
@@ -62,9 +56,6 @@ g = 0.3
 
 score = 0 
 
-
-
-
 pygame.init()
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Runner")
@@ -73,9 +64,6 @@ test_font = pygame.font.Font('font/Pixeltype.ttf', 50)
 
 game_active = False
 start_time = 0
-
-player = pygame.sprite.GroupSingle()
-player.add(Player())
 
 sky_surf = pygame.image.load('img/Sky.png').convert()
 ground_surf = pygame.image.load('img/ground.png').convert()
@@ -186,7 +174,6 @@ while True:
 
         player_surf = player_animation()
         screen.blit(player_surf, player_rect)
-        player.draw(screen)
 
         
         # Obstacle movement 
