@@ -212,6 +212,6 @@ while True:
         if score == 0: screen.blit(game_message_surf, game_message_rect)
         else: screen.blit(game_score_surf, game_score_rect)
 
-         
+          
     pygame.display .update()
     clock.tick(fps)
