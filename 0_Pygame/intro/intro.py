@@ -2,7 +2,6 @@ import pygame
 from sys import exit
 from random import randint
 
-
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -28,12 +27,18 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom >= 300:
             self.rect.bottom = 300
 
+    def animation_state(self):
+        if self.rect.bottom < 300:
+            self.image = self.player_jump
+
+        else:
+           self.player_index += 0.1
+           if self.player_index >= len(self.player_walk):self.player_index = 0 
+
     def update(self):
         self.player_input()
         self.apply_gravity()  
-         
-      
-
+        self.animation_state()
 
 def display_score():
     current_time = pygame.time.get_ticks() - start_time
@@ -87,9 +92,6 @@ player_v = 0
 g = 0.3
 
 score = 0 
-
-
-
 
 pygame.init()
 screen = pygame.display.set_mode(size)
