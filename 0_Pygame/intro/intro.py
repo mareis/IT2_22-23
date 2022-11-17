@@ -33,12 +33,45 @@ class Player(pygame.sprite.Sprite):
 
         else:
            self.player_index += 0.1
-           if self.player_index >= len(self.player_walk):self.player_index = 0 
+           if self.player_index >= len(self.player_walk):self.player_index = 0
+           self.image = self.player_walk[int(self.player_index)]
 
     def update(self):
         self.player_input()
         self.apply_gravity()  
         self.animation_state()
+
+class Obstacle(pygame.sprite.Sprite):
+    def __init__(self,type):
+        super().__init__()
+
+        if type == 'fly':
+            self.frames = [
+                pygame.image.load('img/fly/fly1.png').convert_alpha(),
+                pygame.image.load('img/fly/fly2.png').convert_alpha()
+            ]
+            y_pos = 210
+        
+        else:
+            self.frames = [
+                pygame.image.load('img/snail/snail1.png').convert_alpha(),
+                pygame.image.load('img/snail/snail2.png').convert_alpha() 
+            ]
+            y_pos = 300
+
+
+        self.animation_index = 0
+        self.image = self.frames[self.animation_index]
+        self.rect = self.image.get_rect(midbottom = (randint(900, 1100), y_pos))
+
+    def animation_state(self):
+        self.animation_index += 0.1
+        if self.animation_index >= len(self.frames):self.animation_index = 0
+        self.image = self.frames[int(self.animation_index)]
+
+    def update(self):
+        self.animation_state()
+        self.rect.x -= 6
 
 def display_score():
     current_time = pygame.time.get_ticks() - start_time
@@ -102,8 +135,12 @@ test_font = pygame.font.Font('font/Pixeltype.ttf', 50)
 game_active = False
 start_time = 0
 
+#Groups
 player = pygame.sprite.GroupSingle()
 player.add(Player())
+
+obstacle_group = pygame.sprite.Group()
+
 
 sky_surf = pygame.image.load('img/Sky.png').convert()
 ground_surf = pygame.image.load('img/ground.png').convert()
@@ -178,9 +215,13 @@ while True:
                     player_v = -8
 
             if event.type == obstacle_timer:
+                obstacle_group.add(Obstacle('fly'))
                 if randint(0,2):obstacle_rect_list.append(snail_surf.get_rect(midbottom = (randint(900, 1100), 300)))
                 else: obstacle_rect_list.append(fly_surf.get_rect(midbottom = (randint(900, 1100), 210)))
 
+            
+            
+            
             if event.type == snail_animation_timer:
                 if snail_frame_index == 0: snail_frame_index = 1
                 else: snail_frame_index = 0
@@ -216,6 +257,9 @@ while True:
         screen.blit(player_surf, player_rect)
         player.draw(screen)
         player.update()
+
+        obstacle_group.draw(screen)
+        obstacle_group.update()
 
         
         # Obstacle movement 
