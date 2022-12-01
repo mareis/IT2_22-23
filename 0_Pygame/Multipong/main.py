@@ -55,7 +55,6 @@ screen = pygame.display.set_mode((600, 800))
 clock = pygame.time.Clock()
 
 player = pygame.sprite.GroupSingle()
-player.add(Pad())
 
 balls = pygame.sprite.Group()
 balls.add(Ball())
@@ -80,9 +79,11 @@ while True:
     player.draw(screen)
     player.update()
     
-    pygame.display.update()
-    clock.tick(60)
-
     collided_balls = pygame.sprite.spritecollide(player.sprite, balls, False)
     for ball in collided_balls:
         ball.direction *= -1
+
+    pygame.display.update()
+    clock.tick(60)
+
+
