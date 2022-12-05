@@ -79,7 +79,7 @@ while True:
             astroids.add(Astroid())
 
 
-        if event.type == pygame.KEYDOWN:
+        if event.type == pygame.KEYDOWN :
             if event.key == pygame.K_SPACE:
                 bullets.add(Bullet())
 
