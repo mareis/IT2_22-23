@@ -95,6 +95,10 @@ while True:
     collided_balls = pygame.sprite.spritecollide(player.sprite, balls, False)
     for ball in collided_balls:
         ball.direction *= -1
+        diff = round((ball.rect.midtop[0] - player.sprite.rect.midtop[0])/10)
+
+        ball.v = diff
+
     
     for ball in balls:
         brick_hit_list = pygame.sprite.spritecollide(ball, bricks, True)
