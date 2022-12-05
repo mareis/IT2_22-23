@@ -64,7 +64,6 @@ astroids = pygame.sprite.Group()
 astroids.add(Astroid())
 
 bullets = pygame.sprite.Group()
-bullets.add(Astroid())
 
 astroid_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(astroid_timer, 500) 
@@ -94,12 +93,16 @@ while True:
     bullets.draw(screen)
     bullets.update()
 
-    for bullet in bullets:
-        astroid_hit_list = pygame.sprite.spritecollide(bullet, astroids, True)
+    #for bullet in bullets:
+    #    astroid_hit_list = pygame.sprite.spritecollide(bullet, astroids, True)
+    #
+    #    for astroid in astroid_hit_list:
+    #        bullets.remove(bullet)
 
-        for astroid in astroid_hit_list:
-            bullets.remove(bullet)
+    test = pygame.sprite.groupcollide(astroids, bullets, True, True)
 
+    if test:
+        print(test)
 
     collide_astroids = pygame.sprite.spritecollide(player.sprite, astroids, True)
     for astroid in collide_astroids:
