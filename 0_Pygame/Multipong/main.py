@@ -71,7 +71,6 @@ while True:
         if event.type == ball_timer:
             balls.add(Ball())
 
-
     screen.fill((0,0,0))
     balls.draw(screen)
     balls.update()
@@ -82,6 +81,7 @@ while True:
     collided_balls = pygame.sprite.spritecollide(player.sprite, balls, False)
     for ball in collided_balls:
         ball.direction *= -1
+        
 
     pygame.display.update()
     clock.tick(60)
