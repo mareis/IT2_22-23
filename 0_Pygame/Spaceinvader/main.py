@@ -19,6 +19,17 @@ class Astroid(pygame.sprite.Sprite):
     def update(self):
         self.rect.y += self.v
 
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.Surface((5, 5))
+        self.image.fill('white')
+        self.rect = self.image.get_rect(midbottom = player.sprite.rect.midtop)
+
+
+    def update(self):
+        self.rect.y -= 10
+
 class SpaceShip(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -37,6 +48,7 @@ class SpaceShip(pygame.sprite.Sprite):
 
         if keys[pygame.K_RIGHT] and self.rect.right <= 800:
             self.rect.x += 10
+        
     
     def update(self):
         self.player_input()
@@ -51,6 +63,9 @@ player.add(SpaceShip())
 astroids = pygame.sprite.Group()
 astroids.add(Astroid())
 
+bullets = pygame.sprite.Group()
+bullets.add(Astroid())
+
 astroid_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(astroid_timer, 500) 
 
@@ -63,6 +78,12 @@ while True:
         if event.type == astroid_timer:
             astroids.add(Astroid())
 
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                bullets.add(Bullet())
+
+
     screen.fill((0,0,0))
     astroids.draw(screen)
     astroids.update()
@@ -70,9 +91,20 @@ while True:
     player.draw(screen)
     player.update()
 
+    bullets.draw(screen)
+    bullets.update()
+
+    for bullet in bullets:
+        astroid_hit_list = pygame.sprite.spritecollide(bullet, astroids, True)
+
+        for astroid in astroid_hit_list:
+            bullets.remove(bullet)
+
+
     collide_astroids = pygame.sprite.spritecollide(player.sprite, astroids, True)
     for astroid in collide_astroids:
         astroids.empty()
+
 
     pygame.display.update()
 
