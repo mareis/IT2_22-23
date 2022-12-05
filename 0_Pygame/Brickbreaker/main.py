@@ -92,16 +92,14 @@ while True:
     balls.draw(screen)
     balls.update()
 
-
     collided_balls = pygame.sprite.spritecollide(player.sprite, balls, False)
     for ball in collided_balls:
         ball.direction *= -1
-
-    # collided_bricks = pygame.sprite.groupcollide(player.sprite, balls, False)
     
     for ball in balls:
         brick_hit_list = pygame.sprite.spritecollide(ball, bricks, True)
-
+        if brick_hit_list:
+            ball.direction *= -1
 
     pygame.display.update()
     clock.tick(60)
