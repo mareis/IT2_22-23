@@ -2,7 +2,6 @@ import pygame
 from sys import exit
 from random import randint, choice
 
-
 class Brick(pygame.sprite.Sprite):
     def __init__(self, x, y, color):
         super().__init__()
