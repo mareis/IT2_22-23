@@ -27,19 +27,6 @@ class Snake(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(topleft = (300, 300))
             self.directions = (1, 0)
 
-        def player_input(self):
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_LEFT] and self.directions[1] != 0:
-                self.directions = (-1, 0)
-
-            if keys[pygame.K_RIGHT] and self.directions[1] != 0:
-                self.directions = (1, 0)
-
-            if keys[pygame.K_UP] and self.directions[0] != 0:
-                self.directions = (0, -1)
-
-            if keys[pygame.K_DOWN] and self.directions[0] != 0:
-                self.directions = (0, 1)
 
         def move(self):
             self.rect.x += 20*self.directions[0]
@@ -59,7 +46,6 @@ class Snake(pygame.sprite.Sprite):
              
 
         def update(self):
-            self.player_input()
             self.move()
 
 class Tail(pygame.sprite.Sprite):
@@ -92,6 +78,20 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT and snake.sprite.directions[1] != 0:
+                snake.sprite.directions = (-1, 0)
+
+            if event.key == pygame.K_RIGHT and snake.sprite.directions[1] != 0:
+                snake.sprite.directions = (1, 0)
+
+            if event.key == pygame.K_UP and snake.sprite.directions[0] != 0:
+                snake.sprite.directions = (0, -1)
+
+            if event.key == pygame.K_DOWN and snake.sprite.directions[0] != 0:
+                snake.sprite.directions = (0, 1)
+
         
         if event.type == snake_timer:
             temp1 = snake.sprite.rect.center

@@ -95,7 +95,6 @@ while True:
     for ball in collided_balls:
         ball.direction *= -1
         diff = round((ball.rect.midtop[0] - player.sprite.rect.midtop[0])/10)
-
         ball.v = diff
 
     
