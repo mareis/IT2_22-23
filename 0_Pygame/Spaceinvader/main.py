@@ -77,11 +77,9 @@ while True:
         if event.type == astroid_timer:
             astroids.add(Astroid())
 
-
-        if event.type == pygame.KEYDOWN :
+        if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 bullets.add(Bullet())
-
 
     screen.fill((0,0,0))
     astroids.draw(screen)

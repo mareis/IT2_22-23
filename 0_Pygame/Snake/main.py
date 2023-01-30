@@ -7,9 +7,15 @@ width, height = size = (600, 600)
 class Berry(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.Surface((8, 8))
+        self.image = pygame.Surface((20, 20))
         self.image.fill("Red")
         self.rect = self.image.get_rect(topleft = (x, y))
+
+
+    def update(self):
+        self.rect.x = randint(0,29)*20
+        self.rect.y = randint(0,29)*20
+
 
 
 class Snake(pygame.sprite.Sprite):
@@ -51,7 +57,6 @@ class Snake(pygame.sprite.Sprite):
                self.rect.y = 0
              
 
-
         def update(self):
             self.player_input()
             self.move()
@@ -63,6 +68,9 @@ clock = pygame.time.Clock()
 
 snake = pygame.sprite.GroupSingle()
 snake.add(Snake())
+
+berry = pygame.sprite.GroupSingle()
+berry.add(Berry(width/2, height/2))
 
 
 snake_timer = pygame.USEREVENT + 1
@@ -81,6 +89,11 @@ while True:
     
     screen.fill((0,0,0))
     snake.draw(screen)
+    berry.draw(screen)
+
+    eat_berry = pygame.sprite.spritecollide(snake.sprite, berry, False)
+    for b in eat_berry :
+        b.update()
     
     pygame.display.update()
     clock.tick(60)

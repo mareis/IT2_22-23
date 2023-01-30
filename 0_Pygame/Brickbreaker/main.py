@@ -80,7 +80,6 @@ while True:
             pygame.quit()
             exit()
         
-
     screen.fill((0,0,0))
 
     bricks.draw(screen)
@@ -92,6 +91,7 @@ while True:
     balls.update()
 
     collided_balls = pygame.sprite.spritecollide(player.sprite, balls, False)
+    
     for ball in collided_balls:
         ball.direction *= -1
         diff = round((ball.rect.midtop[0] - player.sprite.rect.midtop[0])/10)
