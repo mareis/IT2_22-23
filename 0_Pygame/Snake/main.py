@@ -18,7 +18,6 @@ class Berry(pygame.sprite.Sprite):
         self.rect.x = randint(0,29)*20
         self.rect.y = randint(0,29)*20
 
-
 class Snake(pygame.sprite.Sprite):
         def __init__(self):
             super().__init__()
@@ -32,16 +31,16 @@ class Snake(pygame.sprite.Sprite):
             self.rect.x += 20*self.directions[0]
             self.rect.y += 20*self.directions[1]
 
-            if self.rect.x >= width - 10:
+            if self.rect.x > width - 10:
                self.rect.x = 0
 
-            if self.rect.x <= 0:
+            if self.rect.x < 0:
                self.rect.x = width
 
-            if self.rect.y <= 0:
+            if self.rect.y < 0:
                self.rect.y == height
 
-            if self.rect.y >= height - 10:
+            if self.rect.y > height - 10:
                self.rect.y = 0
              
 
@@ -54,7 +53,6 @@ class Tail(pygame.sprite.Sprite):
         self.image = pygame.Surface((20, 20))
         self.image.fill((255,255,255))
         self.rect = self.image.get_rect(topleft = (x, y))
-
 
 
 pygame.init()
@@ -71,7 +69,7 @@ tail = pygame.sprite.Group()
 
 
 snake_timer = pygame.USEREVENT + 1
-pygame.time.set_timer(snake_timer, 200) 
+pygame.time.set_timer(snake_timer, 100) 
 
 while True:
     for event in pygame.event.get():
@@ -102,7 +100,11 @@ while True:
             
             snake.update()
 
-
+            collide_tail = pygame.sprite.spritecollide(snake.sprite, tail, False)
+            for t in collide_tail:
+                pygame.quit()
+                exit()
+            
 
     screen.fill((0,0,0))
     snake.draw(screen)
@@ -110,9 +112,11 @@ while True:
     tail.draw(screen)
 
     eat_berry = pygame.sprite.spritecollide(snake.sprite, berry, False)
-    for b in eat_berry :
+    for b in eat_berry:
         tail.add(Tail(b.rect.x, b.rect.y))
         b.update()
+
+
             
     pygame.display.update()
     clock.tick(60)
