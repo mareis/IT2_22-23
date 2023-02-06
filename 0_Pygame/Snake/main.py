@@ -10,10 +10,23 @@ class Game():
         self.scores = []
 
     def update_scores(self, name, score):
+        self.read_scores()
         self.scores.append({'name': name, 'score':score})
         self.scores = sorted(self.scores, key=lambda x: x['score'], reverse=True)
-        
+        self.write_scores()
 
+    def read_scores(self):
+        with open('scores.csv', 'r') as f:
+            for line in f:
+                l = line.split(';')
+                s = int(l[1].strip('\n'))
+                self.scores.append({'name':l[0], 'score':s})
+
+    def write_scores(self):
+        with open('scores.csv', 'w') as f:
+            for score in self.scores:
+                f.write(f"{score['name']};{score['score']}")
+                f.write('\n')
 
 class Berry(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -76,6 +89,8 @@ pygame.init()
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 
+game = Game()
+
 def background():
     colors = [(20,20,40), (35, 35, 55)]
     for y in range(0, height, 20):
@@ -135,9 +150,10 @@ while True:
 
             collide_tail = pygame.sprite.spritecollide(snake.sprite, tail, False)
             for t in collide_tail:
+                game.update_scores("Mads", berry.sprite.count)
                 pygame.quit()
                 exit()
-            
+        
     #screen.fill((0,0,0))
     square.draw(screen)
     snake.draw(screen)
