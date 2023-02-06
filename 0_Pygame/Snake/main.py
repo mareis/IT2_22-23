@@ -4,6 +4,17 @@ from random import randint, choice
 
 width, height = size = (600, 600)
 
+class Game():
+    def __init__(self):
+        super().__init__()
+        self.scores = []
+
+    def update_scores(self, name, score):
+        self.scores.append({'name': name, 'score':score})
+        self.scores = sorted(self.scores, key=lambda x: x['score'], reverse=True)
+        
+
+
 class Berry(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
@@ -22,8 +33,8 @@ class Snake(pygame.sprite.Sprite):
         def __init__(self):
             super().__init__()
             self.image = pygame.Surface((20, 20))
-            self.image.fill((0,255,0))
-            self.rect = self.image.get_rect(topleft = (300, 300))
+            self.image.fill((10,200,0))
+            self.rect = self.image.get_rect(topleft = (100, 100))
             self.directions = (1, 0)
 
 
@@ -51,13 +62,33 @@ class Tail(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
         self.image = pygame.Surface((20, 20))
-        self.image.fill((255,255,255))
+        self.image.fill((30,100,0))
         self.rect = self.image.get_rect(topleft = (x, y))
 
+class Square(pygame.sprite.Sprite):
+    def __init__(self, x, y, color):
+        super().__init__()
+        self.image = pygame.Surface((20, 20))
+        self.image.fill(color)
+        self.rect = self.image.get_rect(topleft = (x, y))
 
 pygame.init()
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
+
+def background():
+    colors = [(20,20,40), (35, 35, 55)]
+    for y in range(0, height, 20):
+        for x in range(0, width, 20):
+            if (x+y)%40 == 0:
+                i = 0
+            else: 
+                i = 1
+
+            square.add(Square(x,y,colors[i]))
+
+square = pygame.sprite.Group()
+background()
 
 snake = pygame.sprite.GroupSingle()
 snake.add(Snake())
@@ -67,11 +98,13 @@ berry.add(Berry(width/2, height/2))
 
 tail = pygame.sprite.Group()
 
+font = pygame.font.Font(None, 30)
 
 snake_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(snake_timer, 100) 
 
 while True:
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -105,17 +138,19 @@ while True:
                 pygame.quit()
                 exit()
             
-
-    screen.fill((0,0,0))
+    #screen.fill((0,0,0))
+    square.draw(screen)
     snake.draw(screen)
     berry.draw(screen)
     tail.draw(screen)
+
+    tekst = font.render(f"Score: {berry.sprite.count}", True, "Red", None)
+    screen.blit(tekst, (20, 20))
 
     eat_berry = pygame.sprite.spritecollide(snake.sprite, berry, False)
     for b in eat_berry:
         tail.add(Tail(b.rect.x, b.rect.y))
         b.update()
-
 
             
     pygame.display.update()
