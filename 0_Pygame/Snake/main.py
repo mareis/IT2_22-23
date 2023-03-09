@@ -3,6 +3,7 @@ from sys import exit
 from random import randint, choice
 
 width, height = size = (600, 600)
+active = False
 
 class Game():
     def __init__(self):
@@ -16,6 +17,7 @@ class Game():
         self.write_scores()
 
     def read_scores(self):
+        self.scores = []
         with open('scores.csv', 'r') as f:
             for line in f:
                 l = line.split(';')
@@ -90,6 +92,9 @@ screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 
 game = Game()
+game.read_scores()
+
+name = ''
 
 def background():
     colors = [(20,20,40), (35, 35, 55)]
@@ -114,60 +119,89 @@ berry.add(Berry(width/2, height/2))
 tail = pygame.sprite.Group()
 
 font = pygame.font.Font(None, 30)
+font2 = pygame.font.Font(None, 100)
 
 snake_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(snake_timer, 100) 
 
 while True:
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT and snake.sprite.directions[1] != 0:
-                snake.sprite.directions = (-1, 0)
+        if  active:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT and snake.sprite.directions[1] != 0:
+                    snake.sprite.directions = (-1, 0)
 
-            if event.key == pygame.K_RIGHT and snake.sprite.directions[1] != 0:
-                snake.sprite.directions = (1, 0)
+                if event.key == pygame.K_RIGHT and snake.sprite.directions[1] != 0:
+                    snake.sprite.directions = (1, 0)
 
-            if event.key == pygame.K_UP and snake.sprite.directions[0] != 0:
-                snake.sprite.directions = (0, -1)
+                if event.key == pygame.K_UP and snake.sprite.directions[0] != 0:
+                    snake.sprite.directions = (0, -1)
 
-            if event.key == pygame.K_DOWN and snake.sprite.directions[0] != 0:
-                snake.sprite.directions = (0, 1)
+                if event.key == pygame.K_DOWN and snake.sprite.directions[0] != 0:
+                    snake.sprite.directions = (0, 1)
 
+            if event.type == snake_timer:
+                temp1 = snake.sprite.rect.center
+                for t in tail:
+                    temp2 =  t.rect.center
+                    t.rect.center = temp1
+                    temp1 = temp2
+                
+                snake.update()
+
+                collide_tail = pygame.sprite.spritecollide(snake.sprite, tail, False)
+                for t in collide_tail:
+                    game.update_scores("Mads", berry.sprite.count)
+                    active = False
         
-        if event.type == snake_timer:
-            temp1 = snake.sprite.rect.center
-            for t in tail:
-                temp2 =  t.rect.center
-                t.rect.center = temp1
-                temp1 = temp2
+        else:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    active = True
+
+                if event.key == pygame.K_BACKSPACE:
+                    name = name[:-1]
+
+                else:
+                    name += event.unicode
+
+
+    if active:
+        square.draw(screen)
+        snake.draw(screen)
+        berry.draw(screen)
+        tail.draw(screen)
+
+        tekst = font.render(f"Score: {berry.sprite.count}", True, "Red", None)
+        screen.blit(tekst, (20, 20))
+
+        eat_berry = pygame.sprite.spritecollide(snake.sprite, berry, False)
+        for b in eat_berry:
+            tail.add(Tail(b.rect.x, b.rect.y))
+            b.update()
+
+    else:
+        tekst = font2.render("Snake", True, "Red", None)
+        screen.blit(tekst, (200, 30))
+        tekst = font.render(f"Name: {name}", True, "Yellow", None)
+        screen.blit(tekst, (200, 115))
+        tekst = font.render("Top 10", True, "White", None)
+        screen.blit(tekst, (200, 150))
+
+        rank = 1
+        while rank <= 10:
+            gamer = game.scores[rank-1]
+            tekst = font.render(f"{rank:3}: {gamer['name']:10}{gamer['score']:<5}", True, "White", None)
+            screen.blit(tekst, (200, 150+35*rank))
             
-            snake.update()
+            rank += 1
 
-            collide_tail = pygame.sprite.spritecollide(snake.sprite, tail, False)
-            for t in collide_tail:
-                game.update_scores("Mads", berry.sprite.count)
-                pygame.quit()
-                exit()
-        
-    #screen.fill((0,0,0))
-    square.draw(screen)
-    snake.draw(screen)
-    berry.draw(screen)
-    tail.draw(screen)
 
-    tekst = font.render(f"Score: {berry.sprite.count}", True, "Red", None)
-    screen.blit(tekst, (20, 20))
 
-    eat_berry = pygame.sprite.spritecollide(snake.sprite, berry, False)
-    for b in eat_berry:
-        tail.add(Tail(b.rect.x, b.rect.y))
-        b.update()
 
-            
     pygame.display.update()
     clock.tick(60)
