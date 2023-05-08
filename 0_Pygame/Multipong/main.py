@@ -1,6 +1,5 @@
-import pygame
-from sys import exit
 from random import randint, choice
+import pygame
 
 class Ball(pygame.sprite.Sprite):
     def __init__(self):
@@ -49,6 +48,8 @@ class Pad(pygame.sprite.Sprite):
 
     def update(self):
         self.player_input()
+
+
 
 pygame.init()
 screen = pygame.display.set_mode((600, 800))
