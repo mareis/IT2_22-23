@@ -4,18 +4,51 @@ from random import randint, choice
 
 WINDOW_WIDTH = 800
 WINDOW_HIGHT = 600
+FPS = 60
 
 class Game:
+    """
+    En spillklasse.
+    ...
+
+    Attributes
+    ----------
+    screen
+        metode fra pygame som setter størelsen på vinduet
+    clock
+        metode fra pygame som håndterer tid
+    aircrafts
+        innebygd metode fra pygame som samler alle flyene som "sprites" 
+
+    aircraft_timer
+        innebygd håndtering av hendelser i spillet. I dette tilfellet så er settes 
+        intervallet til 1 sekund
+
+    Methods
+    -------
+    update():
+        håndterer alt som skal oppdateres i spillet
+
+    draw():
+        håndterer alt som skal tegnes til skjerm
+
+    check_event():
+        håndterer alle hendelsene i spillet
+
+    
+    run():
+        inneholder spilløkken
+    
+    """     
+
     def __init__(self):
         self.screen = pg.display.set_mode([WINDOW_WIDTH, WINDOW_HIGHT])
         self.clock = pg.time.Clock()
-
         self.aircrafts = pg.sprite.Group()
-        self.aircrafts.add(Boeng())
-        self.aircrafts.add(AirBuss())
-
-        #self.ball_timer = pg.USEREVENT + 1
-        #pg.time.set_timer(self.ball_timer, 1500) 
+        #self.aircrafts.add(Boeng())
+        #self.aircrafts.add(AirBuss())
+        self.aircraft_timer = pg.USEREVENT + 1
+        pg.time.set_timer(self.aircraft_timer, 1000) 
     
     def new_game(self):
         pass
@@ -23,7 +56,7 @@ class Game:
 
     def update(self):
         pg.display.update()
-        self.clock.tick(60)
+        self.clock.tick(FPS)
         self.aircrafts.update()
 
     def draw(self):
@@ -36,6 +69,10 @@ class Game:
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
+
+            if event.type == self.aircraft_timer:
+                ac = [Boeng(), AirBuss()]
+                self.aircrafts.add(ac[randint(0,1)])
    
     def run(self):
         while True:
@@ -44,9 +81,33 @@ class Game:
             self.draw()
 
 class Aircraft(pg.sprite.Sprite):
+    """
+    En overordna flyklasse.
+    ...
+
+    Attributes
+    ----------
+    x : int
+        x-koordinat til flyet
+    y : int
+        y-koordinat til flyet. Tilfeldig mellom 30 og 400
+    
+    Methods
+    -------
+    drawImage():
+        tegner flyet som en rektangel
+
+    movement():
+        bestemmer bevegelsen til flyet
+
+    update():
+        oppdaterer det som treng
+
+    """     
+
     def __init__(self):
         super().__init__()
-        self.x = 100
+        self.x = -100
         self.y = randint(30, 400)
         
     def drawImage(self):
@@ -61,6 +122,33 @@ class Aircraft(pg.sprite.Sprite):
         self.movement()
 
 class Boeng(Aircraft):
+    """
+    Spesifikt fly som arver fra Aircraft-klassen
+    ...
+
+    Attributes
+    ----------
+    width : int
+        bredden/lengden til flyet
+    height : int
+        høyden til flyet. Tilfeldig mellom 30 og 400
+    color : str
+        fargen til flyet
+    speed : int
+        farten til flyet
+
+    Methods
+    -------
+    drawImage():
+        tegner flyet som en rektangel
+
+    movement():
+        bestemmer bevegelsen til flyet
+
+    update():
+        oppdaterer det som treng
+
+    """     
     def __init__(self):
         super().__init__()
         self.width = 35
@@ -70,6 +158,33 @@ class Boeng(Aircraft):
         self.drawImage()
        
 class AirBuss(Aircraft):
+    """
+    Spesifikt fly som arver fra Aircraft-klassen
+    ...
+
+    Attributes
+    ----------
+    width : int
+        bredden/lengden til flyet
+    height : int
+        høyden til flyet. Tilfeldig mellom 30 og 400
+    color : str
+        fargen til flyet
+    speed : int
+        farten til flyet
+
+    Methods
+    -------
+    drawImage():
+        tegner flyet som en rektangel
+
+    movement():
+        bestemmer bevegelsen til flyet
+
+    update():
+        oppdaterer det som treng
+
+    """ 
     def __init__(self):
         super().__init__()
         self.width = 45
