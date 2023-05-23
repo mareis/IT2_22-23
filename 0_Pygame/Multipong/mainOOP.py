@@ -22,9 +22,9 @@ class Game:
     
     def new_game(self):
         pass
+    
 
     def update(self):
-        pg.display.flip()
         pg.display.update()
         self.clock.tick(60)
 
@@ -37,7 +37,6 @@ class Game:
 
         self.pad.draw(self.screen)
         self.pad.update()
-    
     
     def check_event(self):
         for event in pg.event.get():
@@ -53,13 +52,16 @@ class Game:
         collided_balls = pg.sprite.spritecollide(self.pad.sprite, self.balls, False)
         for ball in collided_balls:
             ball.direction *= -1
+            ball.update_size()
+
+            self.pad.sprite.update_size()
+            
 
     def run(self):
         while True:
             self.check_event()
             self.update()
             self.draw()
-
 
 class Pad(pg.sprite.Sprite):
     def __init__(self):
@@ -82,9 +84,14 @@ class Pad(pg.sprite.Sprite):
         if keys[pg.K_RIGHT] and self.rect.right <= WINDOW_WIDTH:
             self.rect.x += 10
 
+    def update_size(self):
+        self.width = randint(20,200)
+        self.image = pg.transform.scale(self.image, (self.width, 10))
+        self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
+
+
     def update(self):
         self.player_input()
-
 
 class Ball(pg.sprite.Sprite):
     def __init__(self):
@@ -107,6 +114,12 @@ class Ball(pg.sprite.Sprite):
 
         if self.rect.y < 0:
             self.direction *= -1
+
+
+    def update_size(self):
+        self.width = randint(10,100)
+        self.image = pg.transform.scale(self.image, (self.width, self.width))
+        self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
 
 if __name__ == '__main__':
     game = Game()
