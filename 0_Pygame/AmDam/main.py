@@ -137,16 +137,6 @@ class Boeng(Aircraft):
     speed : int
         farten til flyet
 
-    Methods
-    -------
-    drawImage():
-        tegner flyet som en rektangel
-
-    movement():
-        bestemmer bevegelsen til flyet
-
-    update():
-        oppdaterer det som treng
 
     """     
     def __init__(self):
